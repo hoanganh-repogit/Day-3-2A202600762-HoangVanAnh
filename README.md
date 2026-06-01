@@ -121,5 +121,3 @@ Dữ liệu JSON lưu trữ đầy đủ thông tin:
 * `usage`: Thông số tokens tiêu thụ (`prompt_tokens`, `completion_tokens`, `total_tokens`) giúp bạn điền số liệu vào **Group Report** nhanh chóng.
 
 ---
-
-*Chúc bạn hoàn thành bài Lab xuất sắc và đạt điểm tối đa! Dự án được thiết kế chuyên nghiệp, hoạt động mượt mà và bền bỉ trong mọi điều kiện mạng.*
