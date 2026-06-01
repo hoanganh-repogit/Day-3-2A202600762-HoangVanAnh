@@ -1,23 +1,23 @@
-# Individual Report: Lab 3 - Chatbot vs ReAct Agent
+# Báo Cáo Cá Nhân: Lab 3 - Chatbot vs ReAct Agent
 
-- **Student Name**: Hoàng Văn Anh
-- **Student ID**: 2A202600762
-- **Date**: 01/06/2026
+- **Họ và tên học sinh**: Hoàng Văn Anh
+- **Mã số học sinh**: 2A202600762
+- **Ngày thực hiện**: 01/06/2026
 
 ---
 
-## I. Technical Contribution (15 Points)
+## I. Đóng Góp Kỹ Thuật (15 Điểm)
 
-In this laboratory work, I developed the premium interactive Web UI interface and refined the core ReAct agent reasoning flow to guarantee factual accuracy and eliminate random database hallucinations.
+Trong bài thực hành này, tôi đã xây dựng thành công giao diện Web UI tương tác cao cấp và tinh chỉnh luồng lập luận cốt lõi của ReAct Agent nhằm đảm bảo tính chính xác thực tế và triệt tiêu hoàn toàn hiện tượng ảo giác thông tin từ cơ sở dữ liệu.
 
-- **Modules Implemented**:
-  * `app.py`: Created a comprehensive web application utilizing Gradio. The UI provides a soft slate/blue aesthetic, a premium split-column layout, interactive query templates, and dedicated tabs for the **ReAct Research Agent**, **Academic Text Polisher**, and **Citation Formatter**. I later simplified the interface by removing the reasoning console trace accordion to center the user experience entirely on clean scientific Markdown outputs.
-  * `src/tools/academic_tools.py`: Improved the mock database fallback query filtering logic. By restructuring the keyword matching in `_search_mock_database` to only return papers with an actual match score > 0, we completely eliminated irrelevant mock paper injections (such as showing deep learning papers when searching for unrelated topics like sound detection or medical queries) when live APIs are rate-limited or offline.
-  * `src/core/openai_provider.py`: Integrated a strict `temperature=0.0` configuration inside the OpenAI Chat Completion endpoint, forcing highly precise, deterministic reasoning steps and preventing the LLM from inventing non-existent studies.
-  * `src/agent/agent.py`: Restructured the prompt engineering inside `get_system_prompt` to force the agent to format all retrieved scientific studies using a strict Vietnamese layout (Tên Paper, Năm công bố, Đường dẫn, Tóm tắt).
+- **Các Mô-đun Đã Triển Khai**:
+  * `app.py`: Thiết kế và phát triển ứng dụng Web hoàn chỉnh sử dụng thư viện Gradio. Giao diện được thiết kế theo tông màu mềm mại Slate/Blue, bố cục phân cột rõ ràng, các truy vấn mẫu tương tác trực quan và các tab riêng biệt cho **ReAct Research Agent**, **Academic Text Polisher**, và **Citation Formatter**. Sau đó, tôi đã tinh giản giao diện bằng cách **loại bỏ hoàn toàn Accordion xem luồng lập luận chi tiết (ReAct Trace Console)** để giúp người dùng tập trung hoàn toàn vào phản hồi Markdown khoa học chất lượng cao.
+  * `src/tools/academic_tools.py`: Cải tiến bộ lọc tìm kiếm của cơ sở dữ liệu dự phòng (Mock Database Fallback). Bằng cách tái cấu trúc logic so khớp từ khóa trong `_search_mock_database` để chỉ trả về những bài báo có điểm số trùng khớp thực tế lớn hơn 0, chúng tôi đã triệt tiêu hoàn toàn tình trạng Agent tự động hiển thị các bài viết không liên quan (như hiển thị bài báo deep learning khi người dùng tìm kiếm về phát hiện âm thanh hoặc y tế) khi các API bên ngoài bị giới hạn băng thông hoặc ngoại tuyến.
+  * `src/core/openai_provider.py`: Tích hợp cấu hình tham số `temperature=0.0` trong các lệnh gọi Chat Completion của OpenAI, buộc mô hình hoạt động với tính chính xác cao nhất, nhất quán, loại bỏ tối đa khả năng tự bịa đặt thông tin.
+  * `src/agent/agent.py`: Cải tiến Prompt hệ thống trong `get_system_prompt` để bắt buộc Agent trình bày toàn bộ các tài liệu khoa học tìm thấy theo một cấu trúc tiếng Việt chuẩn hóa, trực quan (Tên Paper, Năm công bố, Đường dẫn, Tóm tắt).
 
-- **Code Highlights**:
-  * *Mock Fallback Precision Filtering (`src/tools/academic_tools.py`)*:
+- **Đoạn Code Nổi Bật**:
+  * *Bộ lọc chính xác cơ sở dữ liệu dự phòng (`src/tools/academic_tools.py`)*:
     ```python
     scored_papers = []
     for paper in MOCK_DATABASE:
@@ -32,7 +32,7 @@ In this laboratory work, I developed the premium interactive Web UI interface an
     matched = [paper for score, paper in scored_papers if score > 0]
     return matched[:limit]
     ```
-  * *System Prompt Structure Enforcement (`src/agent/agent.py`)*:
+  * *Cấu trúc hóa đầu ra tiếng Việt nghiêm ngặt (`src/agent/agent.py`)*:
     ```python
     6. When presenting papers in the 'Final Answer', you MUST present each paper systematically and beautifully in Vietnamese using the following structure:
        ### 📄 [Tên Paper]
@@ -41,55 +41,55 @@ In this laboratory work, I developed the premium interactive Web UI interface an
        * **Tóm tắt**: [Tóm tắt nội dung bài viết một cách ngắn gọn, súc tích]
     ```
 
-- **Documentation**:
-  * Authored `GRADIO_GUIDE.md` detailing the simplified Web UI architecture, visual layouts, Mermaid dataflows, and custom run commands. I also embedded a web recording demonstrating the high-accuracy simplified UI in action.
+- **Tài Liệu Kèm Theo**:
+  * Biên soạn tệp hướng dẫn **`GRADIO_GUIDE.md`** mô tả chi tiết kiến trúc tối giản mới của Web UI, sơ đồ luồng dữ liệu Mermaid, các biến môi trường và câu lệnh khởi chạy nhanh. Tệp tài liệu này cũng đã được tích hợp video ghi hình demo thực tế luồng làm việc của hệ thống.
 
 ---
 
-## II. Debugging Case Study (10 Points)
+## II. Nghiên Cứu Trường Hợp Sửa Lỗi (10 Điểm)
 
-During the evaluation of the agent under heavy network traffic, the external academic APIs experienced timeouts and rate limits, causing the agent to get trapped in an infinite retry loop.
+Trong quá trình đánh giá hệ thống dưới điều kiện lưu lượng mạng cao, các API học thuật bên ngoài bị quá tải và trả về lỗi giới hạn lượt truy cập hoặc hết thời gian phản hồi, khiến Agent rơi vào vòng lặp vô hạn.
 
-- **Problem Description**:
-  When the arXiv API timed out or the Semantic Scholar API returned a `429 Too Many Requests` status, the agent would repeatedly try to call `search_arxiv` or `search_semantic_scholar` with the exact same query, believing that a retry would resolve the transient issue. This resulted in an infinite loop that exhausted LLM token budgets and hung the server.
+- **Mô Tả Lỗi**:
+  Khi API arXiv bị timeout hoặc API Semantic Scholar trả về mã lỗi `429 Too Many Requests`, Agent theo phản xạ mặc định sẽ liên tục cố gắng gọi lại `search_arxiv` hoặc `search_semantic_scholar` với cùng một tham số truy vấn gốc. Điều này tạo ra một vòng lặp vô hạn làm cạn kiệt tài khoản API key và gây treo giao diện Web.
 
-- **Log Source** (from `logs/2026-06-01.log`):
+- **Nguồn Nhật Ký Lỗi** (trích xuất từ `logs/2026-06-01.log`):
   ```json
   {"timestamp": "2026-06-01T08:43:14.826452", "event": "TOOL_EXECUTION", "data": {"tool": "search_arxiv", "arguments": "query=\"Retrieval-Augmented Generation\", limit=1", "observation": "Error querying arXiv: HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=10)"}}
   {"timestamp": "2026-06-01T08:43:16.149764", "event": "LLM_CALL", "data": {"prompt": "...", "response": "Thought: Since the initial attempt to search the arXiv database timed out, I'll try to perform the search again to obtain the necessary paper information for citation.\n\nAction: search_arxiv(query=\"Retrieval-Augmented Generation\", limit=1)"}}
   {"timestamp": "2026-06-01T08:43:18.982880", "event": "LLM_CALL", "data": {"prompt": "...", "response": "Observation: [SYSTEM WARNING] You already executed search_arxiv(query=\"Retrieval-Augmented Generation\", limit=1) earlier. Repeating it will result in an infinite loop. Please analyze your previous observation and output your 'Final Answer:' or choose a different action."}}
   ```
 
-- **Diagnosis**:
-  When a tool call returns an error or a timeout observation, the LLM’s default parametric knowledge tends to trigger a blind "retry" since it does not have stateful awareness that a direct retry will just cause the same error in a single session. Without a state-tracking barrier, the agent is unable to adapt.
+- **Chẩn Đoán Nguyên Nhân**:
+  Khi một công cụ trả về lỗi hoặc timeout, tri thức nội tại của LLM thường có xu hướng kích hoạt hành động "thử lại" vì nó tin rằng đó chỉ là sự cố tạm thời. Tuy nhiên, trong một phiên ReAct đơn lẻ, việc thử lại ngay lập tức mà không thay đổi đối số sẽ tiếp tục dẫn đến cùng một kết quả lỗi. LLM không có bộ nhớ theo dõi trạng thái các bước trước để tự động điều chỉnh hành vi.
 
-- **Solution**:
-  I utilized a **Loop Prevention** mechanism inside the ReAct execution loop in `src/agent/agent.py`. The agent maintains an `action_history` list. If a proposed action matches a previously executed action in the same session, the system intercepts the loop, prevents the tool from executing again, and injects a `[SYSTEM WARNING]` warning the agent of the infinite loop. This forces the LLM to either change its query arguments, try an alternative database tool (e.g., switching to Semantic Scholar), or output its `Final Answer` based on cached knowledge.
-
----
-
-## III. Personal Insights: Chatbot vs ReAct (10 Points)
-
-1. **Reasoning**:
-   The `Thought` block acts as a cognitive scratchpad for the model. Unlike a standard chatbot that starts generating the final answer immediately (often leading to premature reasoning paths or hallucinations), the `Thought` block allows the agent to break down complex goals, decide which database is most suitable, evaluate the results of tool outputs, and adjust its plan.
-
-2. **Reliability**:
-   The ReAct Agent can perform *worse* than a standard chatbot in cases of severe API rate-limiting or high-latency networks. Because ReAct is highly dependent on sequential tool executions (each requiring a separate LLM round-trip and a synchronous network request), any slow API call compounds the total latency. If the network is entirely blocked and fallbacks are poorly configured, a standard chatbot can fall back to its internal weights immediately, whereas a ReAct agent will keep attempting tool calls, leading to potential session timeouts.
-
-3. **Observation**:
-   Environment feedback (`Observation`) is the sensory input of the agent. When an observation returned a timeout or an API 429 error, it immediately steered the agent's next steps. For example, seeing `Error: Semantic Scholar API returned status code 429` prompted the agent to formulate a `Thought` recognizing the block, and subsequently switch its `Action` to `search_arxiv` or resort to a clean, factual final answer explaining the limitation rather than hallucinating fake links.
+- **Giải Pháp Khắc Phục**:
+  Tôi đã tích hợp cơ chế **Ngăn Chặn Vòng Lặp Vô Hạn (Loop Prevention)** bên trong vòng lặp ReAct tại `src/agent/agent.py`. Agent sẽ duy trì một danh sách lịch sử hành động `action_history`. Nếu một hành động chuẩn bị thực hiện bị trùng lặp hoàn toàn với hành động đã gọi trước đó trong cùng một phiên, hệ thống sẽ chặn cuộc gọi đó lại và chủ động chèn thêm một cảnh báo hệ thống `[SYSTEM WARNING]`. Cảnh báo này sẽ ép LLM phải nhận thức được nguy cơ lặp lại, từ đó tự động đổi hướng suy nghĩ để thay đổi tham số tìm kiếm, chuyển đổi công cụ (ví dụ sang Semantic Scholar), hoặc đưa ra câu trả lời cuối cùng dựa trên các thông tin hiện hữu.
 
 ---
 
-## IV. Future Improvements (5 Points)
+## III. Nhận Thức Cá Nhân: Chatbot vs ReAct (10 Điểm)
 
-To scale this scientific ReAct assistant into a highly robust production-grade system, the following architectural upgrades should be prioritized:
+1. **Khả năng Lập Luận (Reasoning)**:
+   Khối suy nghĩ `Thought` hoạt động giống như một nháp tư duy của mô hình. Khác với Chatbot thông thường bắt đầu tạo câu trả lời cuối cùng ngay lập tức (dễ dẫn đến phán đoán sai lầm hoặc ảo giác từ vựng), khối `Thought` cho phép Agent chia nhỏ mục tiêu phức tạp thành các bước nhỏ hơn, quyết định lựa chọn công cụ phù hợp nhất, tự đánh giá kết quả từ `Observation` của môi trường, và chủ động điều chỉnh chiến lược lập luận ở các bước tiếp theo.
 
-- **Scalability**:
-  Introduce an **Asynchronous Queue / Task Runner** (e.g., using Celery or FastAPI Background Tasks) for executing tool calls. Instead of blocking the Gradio UI main thread during multi-step searches, the agent can yield step status and allow multiple users to query concurrently without memory or network bottlenecks.
+2. **Độ Tin Cậy (Reliability)**:
+   ReAct Agent có thể hoạt động *kém hiệu quả hơn* Chatbot truyền thống trong trường hợp các API bên ngoài bị lỗi hoặc độ trễ mạng quá lớn. Do ReAct phụ thuộc hoàn toàn vào chuỗi các bước gọi công cụ tuần tự (mỗi bước yêu cầu một chu kỳ LLM đầy đủ và một yêu cầu mạng đồng bộ), bất kỳ sự cố nghẽn mạng nào cũng sẽ tích lũy độ trễ toàn cục lên rất cao. Nếu mạng bị mất kết nối hoàn toàn và hệ thống không có chế độ dự phòng thông minh, Chatbot thường vẫn có thể trả lời dựa trên tri thức có sẵn, trong khi ReAct Agent sẽ liên tục thử nghiệm gọi công cụ thất bại, gây ra trải nghiệm gián đoạn.
 
-- **Safety**:
-  Implement a dual-LLM **Supervisor / Auditor** pattern. A smaller, faster model (or a strict rule-based guardrail) should audit the proposed tool arguments before execution to prevent Prompt Injection, and verify the final answer against the observations to ensure zero data leakage.
+3. **Quan Sát (Observation)**:
+   Phản hồi từ môi trường (`Observation`) là các kênh giác quan của Agent. Khi nhận dạng được kết quả phản hồi lỗi từ API hoặc timeout, Agent lập tức điều chỉnh hướng đi của mình. Ví dụ, khi nhận diện được lỗi `Semantic Scholar API returned status code 429`, Agent viết `Thought` thừa nhận việc nghẽn mạng, tự động quyết định chuyển sang `search_arxiv` hoặc chuyển sang tri thức cục bộ để tạo câu trả lời chân thực thay vì cố bịa ra các đường dẫn giả.
 
-- **Performance**:
-  Deploy a local **Vector Database** (such as Qdrant or Chroma) to index large-scale open-source paper corpuses (e.g., high-quality subsets of arXiv). This permits immediate vector similarity searches when external APIs are rate-limited, completely replacing simple keyword mock searches with high-quality semantic fallbacks.
+---
+
+## IV. Hướng Cải Tiến Trong Tương Lai (5 Điểm)
+
+Để đưa trợ lý khoa học ReAct này lên quy mô hệ thống sản xuất thực tế công nghiệp (production-level), các cải tiến kiến trúc sau cần được thực hiện:
+
+- **Khả Năng Mở Rộng (Scalability)**:
+  Tích hợp **Hàng đợi công việc bất đồng bộ (Asynchronous Queue / Task Runner)** như Celery hoặc FastAPI Background Tasks. Thay vì chặn luồng chính của Gradio Web UI trong quá trình tìm kiếm đa bước tốn thời gian, hệ thống có thể thông báo tiến trình từng bước theo thời gian thực và cho phép hàng trăm người dùng truy cập cùng lúc mà không gây nghẽn tài nguyên máy chủ.
+
+- **Tính An Toàn (Safety)**:
+  Triển khai mô hình **Supervisor / Auditor** song song. Một mô hình LLM nhỏ hơn, nhanh hơn (hoặc bộ lọc quy tắc nghiêm ngặt) sẽ kiểm duyệt các đối số của công cụ trước khi gọi để ngăn chặn các cuộc tấn công tiêm nhiễm Prompt (Prompt Injection), đồng thời kiểm tra chéo câu trả lời cuối cùng đối chiếu với các `Observation` thực tế để đảm bảo không bị rò rỉ dữ liệu hoặc xuất hiện thông tin sai lệch.
+
+- **Hiệu Năng (Performance)**:
+  Thay thế Mock database đơn giản bằng một **Cơ Sở Dữ Liệu Vector (Vector Database)** như Qdrant hoặc Chroma để lập chỉ mục cho kho dữ liệu bài báo mã nguồn mở cục bộ (ví dụ: các bài báo chất lượng cao được tải về trước từ arXiv). Điều này cho phép thực hiện tìm kiếm ngữ nghĩa tương tự (Semantic Search) ngay lập tức khi các API bên ngoài bị sập, mang lại kết quả dự phòng có chất lượng tiệm cận với tìm kiếm trực tuyến thực tế.
