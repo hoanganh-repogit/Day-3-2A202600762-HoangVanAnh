@@ -7,29 +7,24 @@ from src.agent.agent import ReActAgent
 from src.tools.academic_tools import search_arxiv, search_semantic_scholar, academic_polisher, format_citation
 from run_research_agent import get_research_tools
 
-# Function to run the main ReAct agent and capture its step-by-step stdout trace
+# Function to run the main ReAct agent
 def run_research_agent(prompt):
     if not prompt or not prompt.strip():
-        return "Vui lòng nhập yêu cầu nghiên cứu.", "Vui lòng nhập yêu cầu nghiên cứu."
+        return "Vui lòng nhập yêu cầu nghiên cứu."
     
-    stdout_buffer = io.StringIO()
-    with contextlib.redirect_stdout(stdout_buffer):
-        try:
-            # Initialize core provider and agent
-            api_key = os.getenv("OPENAI_API_KEY")
-            provider = OpenAIProvider(model_name="gpt-4o", api_key=api_key)
-            tools = get_research_tools()
-            agent = ReActAgent(llm=provider, tools=tools, max_steps=7)
-            
-            # Run the reasoning loop
-            final_answer = agent.run(prompt)
-        except Exception as e:
-            final_answer = f"Lỗi hệ thống: {e}"
-            
-    trace = stdout_buffer.getvalue()
-    if not trace:
-        trace = "Không trích xuất được luồng suy nghĩ. Hệ thống đang chạy ở chế độ tối giản."
-    return trace, final_answer
+    try:
+        # Initialize core provider and agent
+        api_key = os.getenv("OPENAI_API_KEY")
+        provider = OpenAIProvider(model_name="gpt-4o", api_key=api_key)
+        tools = get_research_tools()
+        agent = ReActAgent(llm=provider, tools=tools, max_steps=7)
+        
+        # Run the reasoning loop
+        final_answer = agent.run(prompt)
+    except Exception as e:
+        final_answer = f"Lỗi hệ thống: {e}"
+        
+    return final_answer
 
 # Wrapper for direct Academic Polisher tool execution
 def run_polisher(text, tone):
@@ -129,27 +124,18 @@ with gr.Blocks() as demo:
                     )
                     
                 with gr.Column(scale=2):
-                    gr.Markdown("#### 📊 Kết quả Lập luận & Phản hồi")
+                    gr.Markdown("#### 📊 Kết quả Phản hồi")
                     
                     # Final Output
                     final_output = gr.Markdown(
                         label="Câu trả lời cuối cùng (Final Answer)",
                         value="*Kết quả phản hồi khoa học từ Agent sẽ xuất hiện ở đây...*"
                     )
-                    
-                    # Live Reasoning Trace
-                    with gr.Accordion("👁️ Xem Luồng Lập luận Chi tiết (ReAct Reasoning Trace)", open=True):
-                        reasoning_trace = gr.Textbox(
-                            label="ReAct Console Trace (Thought -> Action -> Observation)",
-                            lines=12,
-                            max_lines=30,
-                            interactive=False
-                        )
                         
             submit_btn.click(
                 fn=run_research_agent,
                 inputs=research_prompt,
-                outputs=[reasoning_trace, final_output]
+                outputs=final_output
             )
             
         # Tab 2: Cognitive Tool - Academic Polisher

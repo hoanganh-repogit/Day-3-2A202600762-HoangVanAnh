@@ -25,7 +25,8 @@ class OpenAIProvider(LLMProvider):
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=messages,
-            stop=["Observation:", "observation:", "\nObservation:", "\nobservation:"]
+            stop=["Observation:", "observation:", "\nObservation:", "\nobservation:"],
+            temperature=0.0
         )
 
         end_time = time.time()

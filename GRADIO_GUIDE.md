@@ -1,12 +1,12 @@
 # 🔬 Hướng Dẫn Sử Dụng Giao Diện Web UI Gradio (Premium UI Guide)
 
-Tài liệu này cung cấp hướng dẫn chi tiết về cấu trúc, tính năng và cách khởi chạy giao diện Web UI tương tác của **AI Scientific Research Assistant Agent** được phát triển bằng thư viện **Gradio**.
+Tài liệu này cung cấp hướng dẫn chi tiết về cấu trúc tối giản mới, các tính năng và cách khởi chạy giao diện Web UI tương tác của **AI Scientific Research Assistant Agent** được phát triển bằng thư viện **Gradio**.
 
 ---
 
-## 🌟 Tổng Quan Giao Diện
+## 🌟 Tổng Quan Giao Diện Mới (Tối Giản & Tập Trung)
 
-Giao diện Web UI được xây dựng theo phong cách hiện đại với chủ đề **Soft Blue & Slate**, mang lại trải nghiệm tối giản, trực quan và chuyên nghiệp (Premium Academic Aesthetics). Giao diện bao gồm 3 phân hệ chức năng chính được phân tách bằng hệ thống Tabs mượt mà.
+Giao diện Web UI đã được tinh chỉnh tinh gọn và chuyên nghiệp hơn bằng cách **loại bỏ hoàn toàn Accordion xem luồng lập luận (ReAct Trace Console)**. Thay đổi này giúp người dùng tập trung hoàn toàn vào kết quả phản hồi khoa học chất lượng cao mà không bị phân tâm bởi luồng lập luận nội bộ của Agent.
 
 ```mermaid
 graph TD
@@ -15,8 +15,7 @@ graph TD
     A --> D[Tab 3: Citation Formatter]
     
     B --> B1[Research Prompt Input]
-    B --> B2[Live Reasoning Console Trace]
-    B --> B3[Markdown Final Answer]
+    B --> B2[Markdown Final Answer]
     
     C --> C1[Raw Draft Text Input]
     C --> C2[Tone Selection Dropdown]
@@ -29,59 +28,46 @@ graph TD
 
 ---
 
-## 🛠️ Chi Tiết Các Tính Năng
+## 🎥 Video Demo Thực Tế Giao Diện Tối Giản
 
-### 1. 🧠 Phân Hệ ReAct Research Agent
-Đây là cốt lõi của Lab 3, mô phỏng chu trình suy nghĩ và hành động của Agent khoa học:
-* **Mô tả hoạt động**: Người dùng nhập một yêu cầu bằng tiếng Anh (ví dụ: tìm kiếm bài báo, tóm tắt và định dạng trích dẫn). Agent sẽ tự động suy nghĩ từng bước (`Thought`), gọi công cụ học thuật tương ứng (`Action`), tiếp nhận kết quả (`Observation`), và lặp lại cho đến khi đưa ra câu trả lời cuối cùng (`Final Answer`).
-* **Console Trace (Accordion)**: Một thành phần bảng điều khiển thời gian thực thu gọn/mở rộng. Toàn bộ chuỗi lập luận ReAct thô từ thiết bị đầu cuối CLI được hiển thị trực tiếp tại đây giúp người dùng và giám khảo dễ dàng theo dõi logic của Agent.
-* **Gợi ý Truy vấn (Examples)**: Tích hợp sẵn 3 truy vấn khoa học mẫu ở cuối bảng nhập liệu để người dùng có thể thử nghiệm nhanh chỉ với 1 cú click.
+Dưới đây là video ghi lại quá trình trải nghiệm thực tế giao diện tối giản mới, thực hiện tìm kiếm bài báo nghiên cứu về phát hiện âm thanh bất thường không giám sát:
 
-### 2. ✍️ Công Cụ Academic Text Polisher (Biên Tập Khoa Học)
-* **Mô tả hoạt động**: Giúp chuyển đổi các ghi chú thô sơ hoặc kết quả thí nghiệm viết nhanh thành các câu chữ trang trọng, chuẩn văn phong báo chí khoa học quốc tế.
-* **Lựa chọn văn phong (Target Tone)**: Hỗ trợ 4 định dạng phong cách:
-  * `formal academic style` (Văn phong học thuật chuẩn mực)
-  * `concise conference abstract` (Tóm tắt hội thảo cô đọng)
-  * `highly technical paper description` (Mô tả kỹ thuật chuyên sâu)
-  * `grant proposal writing style` (Văn phong đề xuất quỹ nghiên cứu)
-
-### 3. 📖 Bộ Định Dạng Trích Dẫn Quốc Tế (Citation Formatter)
-* **Mô tả hoạt động**: Công cụ tiện ích giúp tạo nhanh tài liệu tham khảo từ các trường thông tin cơ bản của bài viết.
-* **Định dạng hỗ trợ**:
-  * **APA Style**: Trích dẫn dạng tác giả và năm xuất bản theo chuẩn quốc tế APA (tác giả viết tắt tên, ghi nhận họ đầy đủ).
-  * **IEEE Style**: Định dạng trích dẫn dạng số thứ tự chuẩn kỹ thuật IEEE.
-  * **BibTeX Code**: Xuất ra đoạn mã nguồn LaTeX/BibTeX hoàn chỉnh để người dùng copy trực tiếp vào công cụ soạn thảo như Overleaf.
+![Video Demo Giao Diện Gradio Mới](/home/hoangvananh/.gemini/antigravity/brain/8c7d0fac-0fbd-4425-b1e8-dc8d2bf072cb/gradio_simplified_demo_1780309495646.webp)
 
 ---
 
-## 🚀 Hướng Dẫn Vận Hiện Hệ Thống
+## 🛠️ Chi Tiết Các Tính Năng & Nâng Cấp Chống Ảo Giác
+
+### 1. 🧠 Phân Hệ ReAct Research Agent (Độ Chính Xác Tuyệt Đối)
+* **Loại bỏ ảo giác (`temperature=0.0`)**: Hệ thống LLM được cấu hình với độ sáng tạo bằng `0.0`. Điều này giúp Agent hoạt động cực kỳ deterministic và thực tế, cam kết chỉ trích dẫn các bài báo thực sự được tìm thấy qua API hoặc Cơ sở dữ liệu dự phòng.
+* **Bộ lọc Fallback chuẩn xác**: Khi máy chủ rate-limit (HTTP 429), công cụ sẽ chỉ tìm kiếm các bài viết khớp từ khóa trong database dự phòng. Nếu không tìm thấy, hệ thống sẽ báo cáo `"No relevant papers found..."` thay vì tự động hiển thị ngẫu nhiên các bài báo không liên quan.
+* **Cấu trúc Hiển thị Định dạng Bài báo (Chuẩn hóa)**:
+   Mọi bài báo tìm thấy được trình bày một cách có hệ thống bằng Tiếng Việt gồm 4 phần:
+   * **Tên Paper** (Tiêu đề bài viết)
+   * **Năm công bố** (Năm xuất bản thực tế)
+   * **Đường dẫn** (Liên kết PDF hoặc URL bài viết thực tế)
+   * **Tóm tắt** (Nội dung tóm tắt khoa học ngắn gọn bằng tiếng Việt)
+
+### 2. ✍️ Công Cụ Academic Text Polisher (Biên Tập Khoa Học)
+* Chuyển đổi các câu nháp thô sơ, sơ sài thành các đoạn văn phong học thuật, trang trọng và logic phục vụ trực tiếp cho quá trình viết bài báo khoa học.
+
+### 3. 📖 Bộ Định Dạng Trích Dẫn Quốc Tế (Citation Formatter)
+* Tạo tài liệu tham khảo nhanh chuẩn APA, IEEE hoặc mã LaTeX/BibTeX hoàn chỉnh để chèn trực tiếp vào Overleaf hoặc Word.
+
+---
+
+## 🚀 Hướng Dẫn Vận Hành Hệ Thống
 
 ### 1. Chuẩn Bị Môi Trường
-Đảm bảo bạn đã điền đầy đủ thông tin khóa API trong tệp cấu hình `.env` ở thư mục gốc của dự án:
+Đảm bảo bạn đã điền khóa API trong tệp cấu hình `.env` ở thư mục gốc:
 ```env
 OPENAI_API_KEY="sk-proj-..."
 ```
 
 ### 2. Khởi Chạy Ứng Dụng
-Chạy lệnh Python sau từ thư mục gốc của dự án:
 ```bash
 python app.py
 ```
 
-Khi màn hình xuất hiện thông báo sau, ứng dụng đã sẵn sàng:
-```bash
-* Running on local URL:  http://0.0.0.0:7860
-```
-
-### 3. Truy Cập và Sử Dụng
-Mở trình duyệt web của bạn và truy cập đường dẫn:
+Khi ứng dụng chạy thành công, truy cập trình duyệt web của bạn theo đường dẫn sau để trải nghiệm:
 🔗 **http://localhost:7860**
-
----
-
-## 🎨 Tinh Chỉnh Giao Diện (Dành Cho Nhà Phát Triển)
-
-Trong tệp `app.py`, bạn có thể dễ dàng thay đổi giao diện theo sở thích bằng cách chỉnh sửa tham số trong phương thức `demo.launch()`:
-* **Đổi Cổng Port**: Mặc định là `7860`. Bạn có thể thay đổi bằng cách sửa tham số `server_port=7860`.
-* **Đổi Chủ Đề (Themes)**: Hệ thống sử dụng chủ đề premium `gr.themes.Soft(primary_hue="blue", secondary_hue="slate")`. Bạn có thể đổi sang các màu khác như `emerald`, `indigo`, `purple`, hoặc `amber`.
-* **CSS Tùy Biến (Custom CSS)**: Các định dạng màu chữ gradient của tiêu đề lớn và đổ bóng cho khối được cấu hình qua chuỗi `custom_css` ở đầu tệp `app.py`.

@@ -121,8 +121,6 @@ def _search_mock_database(query: str, limit: int = 3) -> list:
     
     scored_papers.sort(key=lambda x: x[0], reverse=True)
     matched = [paper for score, paper in scored_papers if score > 0]
-    if not matched:
-        matched = [paper for score, paper in scored_papers]
     return matched[:limit]
 
 def search_arxiv(query: str, limit: int = 10) -> str:
@@ -171,6 +169,8 @@ def search_arxiv(query: str, limit: int = 10) -> str:
 
     # 2. Fallback to Local Mock Database
     mock_results = _search_mock_database(query, limit)
+    if not mock_results:
+        return "No relevant papers found matching the query in the local fallback database."
     results = []
     for i, paper in enumerate(mock_results):
         results.append(
@@ -227,6 +227,8 @@ def search_semantic_scholar(query: str, limit: int = 10) -> str:
 
     # 2. Fallback to Local Mock Database
     mock_results = _search_mock_database(query, limit)
+    if not mock_results:
+        return "No relevant papers found matching the query in the local fallback database."
     results = []
     for i, paper in enumerate(mock_results):
         results.append(

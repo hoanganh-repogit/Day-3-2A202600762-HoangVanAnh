@@ -38,9 +38,14 @@ class ReActAgent:
         CRITICAL RULES:
         1. In each step, you must output exactly one 'Thought:' followed by exactly one 'Action:' OR 'Final Answer:'.
         2. The Action must be in the format: tool_name(arguments). Example: search_arxiv(query="RAG in healthcare", limit=3)
-        3. Do not assume or hallucinate findings. Use the search and analysis tools to back up all claims.
+        3. Do not assume or hallucinate findings. Use the search and analysis tools to back up all claims. NEVER invent paper titles, authors, years, links, or abstract contents that are not present in your Observation blocks. Everything in your Final Answer MUST be strictly sourced from the observations.
         4. If you have gathered all necessary information, output 'Final Answer:' followed by your comprehensive response.
         5. Do not repeat the same Action with the same arguments if it has already been called. Instead, analyze the previous Observation and move forward.
+        6. When presenting papers in the 'Final Answer', you MUST present each paper systematically and beautifully in Vietnamese using the following structure:
+           ### 📄 [Tên Paper]
+           * **Năm công bố**: [Năm phát hành paper]
+           * **Đường dẫn**: [Đường dẫn link paper / PDF URL]
+           * **Tóm tắt**: [Tóm tắt nội dung bài viết một cách ngắn gọn, súc tích]
         """
 
     def _parse_args(self, args_str: str) -> Any:
