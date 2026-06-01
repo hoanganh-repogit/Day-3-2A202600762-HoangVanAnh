@@ -1,56 +1,125 @@
-# Lab 3: Chatbot vs ReAct Agent (Industry Edition)
+# 🔬 AI Scientific Research Assistant Agent (ReAct CLI)
 
-Welcome to Phase 3 of the Agentic AI course! This lab focuses on moving from a simple LLM Chatbot to a sophisticated **ReAct Agent** with industry-standard monitoring.
+Chào mừng bạn đến với **AI Scientific Research Assistant Agent** – một AI Agent nâng cao triển khai mô hình kiến trúc lập luận **ReAct (Reasoning and Acting)** chuyên nghiệp phục vụ nghiên cứu khoa học. 
 
-## 🚀 Getting Started
+Dự án này là giải pháp toàn diện cho **Lab 3: Chatbot vs ReAct Agent**, được thiết kế theo các tiêu chuẩn công nghệ công nghiệp thực tế với khả năng xử lý lập luận tự động, phòng chống vòng lặp vô hạn, định dạng trích dẫn chuẩn hóa quốc tế và cơ chế dự phòng cục bộ chống lỗi nghẽn mạng băng thông cực kỳ thông minh.
 
-### 1. Setup Environment
-Copy the `.env.example` to `.env` and fill in your API keys:
+---
+
+## 🌟 Tính Năng Nổi Bật
+
+1. **Vòng lặp ReAct Đúng Nghĩa (`src/agent/agent.py`)**: Hiện thực hóa chu trình logic `Thought -> Action -> Observation` chặt chẽ, tự động bóc tách Regex và dừng sinh chuỗi (Stop Sequences) đúng lúc để nhường quyền kiểm soát cho code Python gọi API thật.
+2. **Cơ chế Chống Lặp Vô Hạn (Loop Prevention)**: Giám sát toàn bộ lịch sử hành động của Agent. Nếu phát hiện hành động bị lặp lại, hệ thống tự động tiêm một cảnh báo hệ thống để ép Agent bẻ hướng suy nghĩ và đưa ra câu trả lời dựa trên thông tin sẵn có thay vì lặp vô hạn tốn phí API.
+3. **Bộ Công Cụ Học Thuật Thực Tế (`src/tools/academic_tools.py`)**:
+   * `search_arxiv`: Tìm kiếm bản nháp nghiên cứu trên arXiv qua API XML.
+   * `search_semantic_scholar`: Truy xuất bài báo bình duyệt và **chỉ số trích dẫn (citation count)** để đánh giá độ uy tín.
+   * `academic_polisher`: Công cụ chuyển đổi văn phong nháp thô sơ thành văn phong báo chí khoa học chuyên nghiệp (Premium Academic Style).
+   * `format_citation`: Định dạng tài liệu tham khảo chuẩn APA, IEEE hoặc khối BibTeX.
+4. **Hệ Thống Trích Xuất & Đo Lường Industry Telemetry (`logs/`)**: Tự động ghi nhận mọi sự kiện dưới dạng cấu trúc JSON chuyên nghiệp giúp dễ dàng đo lường hiệu năng (`latency_ms`) và lượng tokens tiêu thụ (`usage`).
+5. **Giao Diện Dòng Lệnh CLI Tương Tác Premium**: Trình tương tác CLI được tinh chỉnh tinh giản, ẩn các log JSON rác để hiển thị một luồng lập luận ReAct cực kỳ sạch đẹp, trực quan và dễ đọc.
+
+---
+
+## 🛠️ Cấu Trúc Dự Án
+
+```bash
+├── src
+│   ├── agent
+│   │   └── agent.py              # Hiện thực hóa vòng lặp ReAct chính & Loop Prevention
+│   ├── core
+│   │   ├── llm_provider.py       # Bộ nạp cấu hình .env hoạt động động
+│   │   └── openai_provider.py    # Cấu hình API OpenAI gpt-4o với Stop Sequences
+│   ├── telemetry
+│   │   └── logger.py             # Hệ thống lưu trữ telemetry JSON dòng
+│   └── tools
+│       └── academic_tools.py     # Bộ 4 công cụ học thuật & Local Database Fallback
+├── logs/                         # Nơi lưu trữ nhật ký telemetry
+├── debug_apis.py                 # Công cụ độc lập chẩn đoán lỗi kết nối API
+├── run_research_agent.py         # Điểm khởi chạy CLI tương tác
+├── requirements.txt              # Danh sách các thư viện phụ thuộc
+└── README.md                     # Tài liệu hướng dẫn sử dụng (tệp này)
+```
+
+---
+
+## 🚨 Chẩn Đoán Lỗi 429 & Giải Pháp Dự Phòng Local Database Fallback
+
+### 1. Nguyên Nhân Gây Ra Lỗi 429 (Too Many Requests)
+Trong quá trình phát triển trên môi trường sandbox học tập, khi nhiều Agent gửi các yêu cầu đồng thời lên máy chủ arXiv hoặc Semantic Scholar, máy chủ sẽ chặn địa chỉ IP chung (NAT IP) của hệ thống vì vượt quá hạn ngạch tần suất cho phép, trả về lỗi **HTTP 429 (Too Many Requests)**.
+
+Để kiểm tra trạng thái API trực tiếp, bạn có thể thực hiện lệnh chẩn đoán:
+```bash
+python debug_apis.py
+```
+Script chẩn đoán sẽ gửi request thô trực tiếp và in ra chi tiết mã lỗi, headers bảo mật cùng thông báo lỗi thô từ các máy chủ để bạn phân tích kỹ thuật.
+
+### 2. Giải Pháp Local Fallback Thông Minh
+Để Agent luôn hoạt động bền bỉ, không bị crash giữa chừng và luôn hoàn thành nhiệm vụ, chúng tôi đã tích hợp **Cơ sở dữ liệu khoa học dự phòng cục bộ (Local Database Fallback)** chứa 10 bài viết khoa học hàng đầu ở nhiều lĩnh vực khác nhau (BERT, ResNet, GANs, RAG, Transformers, và đặc biệt là **Unsupervised Anomalous Sound Detection**).
+* Khi API thật trả về lỗi 429 hoặc mất kết nối -> Công cụ tự động chuyển hướng tìm kiếm trong cơ sở dữ liệu local.
+* Kết quả trả về có định dạng chuẩn xác (Title, Authors, Year, Abstract, URL, Citations, PDF) giúp Agent tiếp tục suy nghĩ và sinh ra định dạng trích dẫn hoặc tóm tắt hoàn hảo ở các bước sau.
+
+---
+
+## 🚀 Hướng Dẫn Cài Đặt & Sử Dụng
+
+### 1. Cấu Hình Môi Trường
+Sao chép tệp cấu hình mẫu và điền khóa OpenAI API của bạn:
 ```bash
 cp .env.example .env
 ```
+Mở tệp `.env` và thiết lập:
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+DEFAULT_PROVIDER=openai
+```
 
-### 2. Install Dependencies
+### 2. Cài Đặt Thư Viện Phụ Thuộc
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Directory Structure
-- `src/tools/`: Extension point for your custom tools.
-
-## 🏠 Running with Local Models (CPU)
-
-If you don't want to use OpenAI or Gemini, you can run open-source models (like Phi-3) directly on your CPU using `llama-cpp-python`.
-
-### 1. Download the Model
-Download the **Phi-3-mini-4k-instruct-q4.gguf** (approx 2.2GB) from Hugging Face:
-- [Phi-3-mini-4k-instruct-GGUF](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf)
-- Direct Download: [phi-3-mini-4k-instruct-q4.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf)
-
-### 2. Place Model in Project
-Create a `models/` folder in the root and move the downloaded `.gguf` file there.
-
-### 3. Update `.env`
-Change your `DEFAULT_PROVIDER` and set the path:
-```env
-DEFAULT_PROVIDER=local
-LOCAL_MODEL_PATH=./models/Phi-3-mini-4k-instruct-q4.gguf
+### 3. Chạy Thử Nghiệm Một Câu Lệnh Độc Lập qua CLI
+Tìm kiếm bài báo khoa học về phân loại tế bào ung thư hoặc các công nghệ AI khác:
+```bash
+python run_research_agent.py "I want you to search the AI paper that refer to classifying cancer"
 ```
 
-## 🎯 Lab Objectives
+Bạn cũng có thể thử nghiệm với bài báo phát hiện âm thanh bất thường:
+```bash
+python run_research_agent.py "I want you to search the AI paper about unsupervised anomalous sound detection"
+```
 
-1.  **Baseline Chatbot**: Observe the limitations of a standard LLM when faced with multi-step reasoning.
-2.  **ReAct Loop**: Implement the `Thought-Action-Observation` cycle in `src/agent/agent.py`.
-3.  **Provider Switching**: Swap between OpenAI and Gemini seamlessly using the `LLMProvider` interface.
-4.  **Failure Analysis**: Use the structured logs in `logs/` to identify why the agent fails (hallucinations, parsing errors).
-5.  **Grading & Bonus**: Follow the [SCORING.md](file:///Users/tindt/personal/ai-thuc-chien/day03-lab-agent/SCORING.md) to maximize your points and explore bonus metrics.
+### 4. Chạy Giao Diện Tương Tác Shell (Interactive REPL)
+Để thực hiện chuỗi nhiều câu lệnh liên tiếp và trò chuyện trực tiếp với Agent:
+```bash
+python run_research_agent.py
+```
+*(Gõ `exit` để thoát khỏi chương trình tương tác).*
 
-## 🛠️ How to Use This Baseline
-The code is designed as a **Production Prototype**. It includes:
-- **Telemetry**: Every action is logged in JSON format for later analysis.
-- **Robust Provider Pattern**: Easily extendable to any LLM API.
-- **Clean Skeletons**: Focus on the logic that matters—the agent's reasoning process.
+### 5. Chạy Giao Diện Web UI Tương Tác Premium (Gradio App)
+Để khởi chạy giao diện web hiện đại, đẹp mắt và trực quan để tương tác với Agent và các công cụ bổ trợ học thuật:
+```bash
+python app.py
+```
+Sau khi khởi chạy thành công, truy cập trình duyệt tại địa chỉ:
+🔗 **http://localhost:7860**
+
+Giao diện Web UI cung cấp 3 phân khu chuyên biệt:
+* **🧠 ReAct Research Agent**: Trực quan hóa luồng suy nghĩ (`Thought` -> `Action` -> `Observation`) trong bảng điều khiển và câu trả lời hoàn thiện.
+* **✍️ Academic Text Polisher**: Công cụ AI biên tập và nâng cấp văn phong nháp thô thành văn phong khoa học chuyên nghiệp.
+* **📖 Citation Formatter**: Hỗ trợ xuất trích dẫn bài viết chuẩn APA, IEEE hoặc mã BibTeX nhanh chóng.
 
 ---
 
-*Happy Coding! Let's build agents that actually work.*
+## 📊 Phân Tích Telemetry & Báo Cáo Kết Quả
+
+Tất cả các lượt chạy thử nghiệm đều được ghi nhận tự động dưới dạng JSON tại:
+📄 `logs/[YYYY-MM-DD].log` (Ví dụ: `logs/2026-06-01.log`)
+
+Dữ liệu JSON lưu trữ đầy đủ thông tin:
+* `latency_ms`: Thời gian phản hồi của LLM (giúp đánh giá tốc độ mô hình).
+* `usage`: Thông số tokens tiêu thụ (`prompt_tokens`, `completion_tokens`, `total_tokens`) giúp bạn điền số liệu vào **Group Report** nhanh chóng.
+
+---
+
+*Chúc bạn hoàn thành bài Lab xuất sắc và đạt điểm tối đa! Dự án được thiết kế chuyên nghiệp, hoạt động mượt mà và bền bỉ trong mọi điều kiện mạng.*
