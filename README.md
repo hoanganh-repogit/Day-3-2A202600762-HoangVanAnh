@@ -102,7 +102,7 @@ python run_research_agent.py
 python app.py
 ```
 Sau khi khởi chạy thành công, truy cập trình duyệt tại địa chỉ:
-🔗 **http://localhost:7860**
+🔗 **http://localhost:**
 
 Giao diện Web UI cung cấp 3 phân khu chuyên biệt:
 * **🧠 ReAct Research Agent**: Trực quan hóa luồng suy nghĩ (`Thought` -> `Action` -> `Observation`) trong bảng điều khiển và câu trả lời hoàn thiện.

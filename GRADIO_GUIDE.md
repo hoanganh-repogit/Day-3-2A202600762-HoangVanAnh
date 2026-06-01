@@ -28,14 +28,6 @@ graph TD
 
 ---
 
-## 🎥 Video Demo Thực Tế Giao Diện Tối Giản
-
-Dưới đây là video ghi lại quá trình trải nghiệm thực tế giao diện tối giản mới, thực hiện tìm kiếm bài báo nghiên cứu về phát hiện âm thanh bất thường không giám sát:
-
-![Video Demo Giao Diện Gradio Mới](/home/hoangvananh/.gemini/antigravity/brain/8c7d0fac-0fbd-4425-b1e8-dc8d2bf072cb/gradio_simplified_demo_1780309495646.webp)
-
----
-
 ## 🛠️ Chi Tiết Các Tính Năng & Nâng Cấp Chống Ảo Giác
 
 ### 1. 🧠 Phân Hệ ReAct Research Agent (Độ Chính Xác Tuyệt Đối)
@@ -70,4 +62,4 @@ python app.py
 ```
 
 Khi ứng dụng chạy thành công, truy cập trình duyệt web của bạn theo đường dẫn sau để trải nghiệm:
-🔗 **http://localhost:7860**
+🔗 **http://localhost:**
